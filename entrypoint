@@ -15,7 +15,6 @@ else
   mkdir $GIT_SYNC_DEST
   cd $GIT_SYNC_DEST
   git init
-  eval $PULL_CMD
 fi
 
 while : ; do
