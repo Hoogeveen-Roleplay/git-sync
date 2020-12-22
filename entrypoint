@@ -3,7 +3,7 @@ if [ -n "$DEBUG" ]; then
     set -x
 fi
 
-PULL_CMD="git pull https://${GIT_SYNC_USERNAME}:${GIT_SYNC_PASSWORD}@${GIT_SYNC_REPO} ${GIT_SYNC_BRANCH}"
+PULL_CMD="git pull ${GIT_SYNC_REPO} ${GIT_SYNC_BRANCH} --recurse-submodules"
 
 if [ -n "$GIT_SYNC_ROOT" ]; then
     cd $GIT_SYNC_ROOT
