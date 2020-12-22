@@ -25,7 +25,7 @@ fi
 
 while : ; do
   git remote update
-  if [ $(git rev-parse --abbrev-ref HEAD) != "master" ]; then
+  if [ $(git rev-parse --abbrev-ref HEAD) != $GIT_SYNC_BRANCH ]; then
     echo -e New version found!
     eval $PULL_CMD
   fi
