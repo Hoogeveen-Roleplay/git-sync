@@ -3,6 +3,7 @@ if [ -n "$DEBUG" ]; then
     set -x
 fi
 
+mkdir /root/.ssh
 cp /etc/secrets-mount/* /root/.ssh
 chown root:root /root/.ssh
 chmod 600 /root/.ssh/*
