@@ -10,6 +10,7 @@ chmod 600 /root/.ssh/*
 
 PULL_CMD="GIT_SSH_COMMAND=\"ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no\" git pull --recurse-submodules"
 CLONE_CMD="GIT_SSH_COMMAND=\"ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no\" git clone --recurse-submodules --single-branch --branch ${GIT_SYNC_BRANCH} ${GIT_SYNC_REPO} ${GIT_SYNC_DEST}"
+UPDATE_CMD="GIT_SSH_COMMAND=\"ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no\" git remote update"
 
 
 if [ -n "$GIT_SYNC_ROOT" ]; then
@@ -24,10 +25,10 @@ else
 fi
 
 while : ; do
-  git remote update
+  eval $UPDATE_CMD
   if [ $(git rev-parse --abbrev-ref HEAD) != $GIT_SYNC_BRANCH ]; then
     echo -e New version found!
     eval $PULL_CMD
   fi
-  sleep 1
+  sleep 10
 done
