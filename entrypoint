@@ -1,0 +1,28 @@
+#!/bin/sh
+if [ -n "$DEBUG" ]; then
+    set -x
+fi
+
+PULL_CMD="git pull https://${GIT_SYNC_USERNAME}:${GIT_SYNC_PASSWORD}@${GIT_SYNC_REPO} ${GIT_SYNC_BRANCH}"
+
+if [ -n "$GIT_SYNC_ROOT" ]; then
+    cd $GIT_SYNC_ROOT
+fi
+
+if [ -d "$GIT_SYNC_DEST" ]; then
+  cd $GIT_SYNC_DEST
+else
+  mkdir $GIT_SYNC_DEST
+  cd $GIT_SYNC_DEST
+  git init
+  eval $PULL_CMD
+fi
+
+while : ; do
+  git remote update
+  if [ $(git rev-parse --abbrev-ref HEAD) != "master" ]; then
+    echo -e New version found!
+    eval $PULL_CMD
+  fi
+  sleep 1
+done
