@@ -3,11 +3,13 @@ if [ -n "$DEBUG" ]; then
     set -x
 fi
 
-cp -r /etc/secrets-mount/* /root/.ssh
-chown $USER /root/.ssh
+cp /etc/secrets-mount/* /root/.ssh
+chown root:root /root/.ssh
 chmod 600 /root/.ssh/*
 
-PULL_CMD="GIT_SSH_COMMAND=\"ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no\" git pull ${GIT_SYNC_REPO} ${GIT_SYNC_BRANCH} --recurse-submodules"
+PULL_CMD="GIT_SSH_COMMAND=\"ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no\" git pull --recurse-submodules"
+CLONE_CMD="GIT_SSH_COMMAND=\"ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no\" git clone --recurse-submodules --single-branch --branch ${GIT_SYNC_BRANCH} ${GIT_SYNC_REPO} ${GIT_SYNC_DEST}"
+
 
 if [ -n "$GIT_SYNC_ROOT" ]; then
     cd $GIT_SYNC_ROOT
@@ -16,9 +18,8 @@ fi
 if [ -d "$GIT_SYNC_DEST" ]; then
   cd $GIT_SYNC_DEST
 else
-  mkdir $GIT_SYNC_DEST
+  eval $CLONE_CMD
   cd $GIT_SYNC_DEST
-  git init
 fi
 
 while : ; do
