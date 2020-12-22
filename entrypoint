@@ -3,8 +3,7 @@ if [ -n "$DEBUG" ]; then
     set -x
 fi
 
-GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
-PULL_CMD="$GIT_SSH_COMMAND git pull ${GIT_SYNC_REPO} ${GIT_SYNC_BRANCH} --recurse-submodules"
+PULL_CMD="GIT_SSH_COMMAND=\"ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no\" git pull ${GIT_SYNC_REPO} ${GIT_SYNC_BRANCH} --recurse-submodules"
 
 if [ -n "$GIT_SYNC_ROOT" ]; then
     cd $GIT_SYNC_ROOT
