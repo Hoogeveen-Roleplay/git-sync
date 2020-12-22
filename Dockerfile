@@ -4,6 +4,8 @@ WORKDIR /tmp/git
 
 RUN apk --update add tini
 
+ADD entrypoint usr/bin/entrypoint
+
 # Default to an empty CMD, so we can use it to add seperate args to the binary
 CMD [""]
 
