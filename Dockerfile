@@ -10,4 +10,4 @@ RUN chmod +x /usr/bin/entrypoint
 # Default to an empty CMD, so we can use it to add seperate args to the binary
 CMD [""]
 
-ENTRYPOINT ["/sbin/tini", "--", "/usr/bin/entrypoint"]
+ENTRYPOINT ["/sbin/tini", "-vvv" ,"--", "/usr/bin/entrypoint"]
