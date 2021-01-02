@@ -51,7 +51,7 @@ cd $GIT_SYNC_DEST
 
 echo "Watching for code changes"
 while true; do
-    git fetch
+    git fetch > /dev/null 2>&1
     CHANGES=$(git log ..origin/master --oneline | wc -l)
 
     if [ "$CHANGES" -gt "0" ]; then
