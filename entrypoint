@@ -8,9 +8,9 @@ cp /etc/secrets-mount/* /root/.ssh
 chown root:root /root/.ssh
 chmod 600 /root/.ssh/*
 
-PULL_CMD="GIT_SSH_COMMAND=\"ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no\" git pull --recurse-submodules"
-CLONE_CMD="GIT_SSH_COMMAND=\"ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no\" git clone --recurse-submodules --single-branch --branch ${GIT_SYNC_BRANCH} ${GIT_SYNC_REPO} ${GIT_SYNC_DEST}"
-
+if [ -n "$GIT_SYNC_SSH_DOMAIN" ]; then
+    ssh-keyscan -H $GIT_SYNC_SSH_DOMAIN >> /root/.ssh/known_hosts
+fi
 
 if [ -n "$GIT_SYNC_ROOT" ]; then
     cd $GIT_SYNC_ROOT
@@ -30,4 +30,36 @@ while : ; do
     eval $PULL_CMD
   fi
   sleep 1
+done
+
+if [ -n "$GIT_SYNC_ROOT" ]; then
+    cd $GIT_SYNC_ROOT
+fi
+
+if [ -z "$GIT_SYNC_REPO" ]; then
+    echo "Please provide a Github repo URL"
+    exit 1
+fi
+
+if [ -z "$POLL_INTERVAL" ]; then
+    POLL_INTERVAL="30"
+fi
+
+echo "Cloning repo '$GITHUB_REPO'"
+git clone --recurse-submodules --single-branch --branch ${GIT_SYNC_BRANCH} ${GIT_SYNC_REPO} ${GIT_SYNC_DEST}
+cd $GIT_SYNC_DEST
+
+echo "Watching for code changes"
+while true; do
+    git fetch
+    CHANGES=$(git log ..origin/master --oneline | wc -l)
+
+    if [ "$CHANGES" -gt "0" ]; then
+      echo "Pulling new changes and rebuilding ..."
+      git reset --hard
+      git pull
+    fi
+
+    echo "Sleep for $POLL_INTERVAL"
+    sleep $POLL_INTERVAL
 done
