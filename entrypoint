@@ -24,12 +24,12 @@ else
 fi
 
 while : ; do
-  git remote update
-  if [ $(git rev-parse --abbrev-ref HEAD) != "master" ]; then
+  eval $UPDATE_CMD
+  if [ $(git rev-parse --abbrev-ref HEAD) != $GIT_SYNC_BRANCH ]; then
     echo -e New version found!
     eval $PULL_CMD
   fi
-  sleep 1
+  sleep 10
 done
 
 if [ -n "$GIT_SYNC_ROOT" ]; then
