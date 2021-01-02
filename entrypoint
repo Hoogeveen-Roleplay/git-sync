@@ -40,6 +40,5 @@ while true; do
       git pull
     fi
 
-    echo "Sleep for $POLL_INTERVAL"
     sleep $POLL_INTERVAL
 done
