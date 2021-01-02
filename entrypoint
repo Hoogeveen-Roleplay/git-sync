@@ -16,26 +16,6 @@ if [ -n "$GIT_SYNC_ROOT" ]; then
     cd $GIT_SYNC_ROOT
 fi
 
-if [ -d "$GIT_SYNC_DEST" ]; then
-  cd $GIT_SYNC_DEST
-else
-  eval $CLONE_CMD
-  cd $GIT_SYNC_DEST
-fi
-
-while : ; do
-  eval $UPDATE_CMD
-  if [ $(git rev-parse --abbrev-ref HEAD) != $GIT_SYNC_BRANCH ]; then
-    echo -e New version found!
-    eval $PULL_CMD
-  fi
-  sleep 10
-done
-
-if [ -n "$GIT_SYNC_ROOT" ]; then
-    cd $GIT_SYNC_ROOT
-fi
-
 if [ -z "$GIT_SYNC_REPO" ]; then
     echo "Please provide a Github repo URL"
     exit 1
