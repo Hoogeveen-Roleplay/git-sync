@@ -37,7 +37,7 @@ while true; do
     if [ "$CHANGES" -gt "0" ]; then
       echo "Pulling new changes and rebuilding ..."
       git reset --hard
-      git pull
+      git pull && git submodule foreach git pull
     fi
 
     sleep $POLL_INTERVAL
